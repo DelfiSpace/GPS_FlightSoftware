@@ -41,6 +41,7 @@
 #include "DSPI_A.h"
 
 #define FCLOCK 48000000
+#define GPS_ADDRESS 10
 
 // callback functions
 void acquireTelemetry(GPSTelemetryContainer *tc);

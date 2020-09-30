@@ -158,8 +158,8 @@ void main(void)
 
     // initialize the console
     Console::init( 115200 );     // baud rate: 9600 bps
-    pq9bus.begin(115200, 1);     // baud rate: 115200 bps
-                                 // address GPS (1)
+    pq9bus.begin(115200, GPS_ADDRESS);     // baud rate: 115200 bps
+                                 // address GPS (10)
 
     //InitBootLoader!
     bootLoader.JumpSlot();
