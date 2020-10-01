@@ -212,54 +212,54 @@ void main(void)
     }else{
         Console::log("SDCard NOT present");
     }
-
-    eUSCI_UART_Config uartConfig;
-    uartConfig.selectClockSource = EUSCI_A_UART_CLOCKSOURCE_SMCLK;
-    unsigned int n = MAP_CS_getSMCLK() / 115200;
-    if (n > 16)
-    {
-        uartConfig.overSampling = EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION; // Over-sampling
-        uartConfig.clockPrescalar = n >> 4;                                      // BRDIV = n / 16
-        uartConfig.firstModReg = n - (uartConfig.clockPrescalar << 4);               // UCxBRF = int((n / 16) - int(n / 16)) * 16
-    }
-    else
-    {
-        uartConfig.overSampling = EUSCI_A_UART_LOW_FREQUENCY_BAUDRATE_GENERATION; // Low-frequency mode
-        uartConfig.clockPrescalar = n;                                            // BRDIV = n
-        uartConfig.firstModReg = 0;                                               // UCxBRF not used
-    }
-    uartConfig.secondModReg = 32;    // UCxBRS = 32 http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSP430BaudRateConverter/index.html
-
-    uartConfig.parity = EUSCI_A_UART_NO_PARITY;
-    uartConfig.msborLsbFirst = EUSCI_A_UART_MSB_FIRST;
-    uartConfig.numberofStopBits = EUSCI_A_UART_ONE_STOP_BIT;
-    uartConfig.uartMode = EUSCI_A_UART_MODE;
-
-    Console::log("Set GPS UART Pins");
-    MAP_GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P3,
-                 GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
-
-    Console::log("Enable UART");
-    /* Configuring UART Module */
-    MAP_UART_initModule(EUSCI_A2_BASE, &uartConfig);
-
-    /* Enable UART module */
-    MAP_UART_enableModule(EUSCI_A2_BASE);
-
-    Console::log("Register Interrupt");
-    /* Enabling interrupts */
-    MAP_UART_enableInterrupt(EUSCI_A2_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT);
-    MAP_UART_registerInterrupt(EUSCI_A2_BASE, &printRX);
-
-    Console::log("Enable GPS Module");
-    GPIO_setAsOutputPin(GPIO_PORT_P8, GPIO_PIN5);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P8, GPIO_PIN5);
-
-    uint8_t enableNMEAdata[10] = {0xA0, 0xA1, 0x00 ,0x03 ,0x09, 0x01, 0x00, 0x08 ,0x0D, 0x0A};
-    for(int i = 0; i < 10; i++){
-        Console::log("sending: %x", enableNMEAdata[i]);
-        MAP_UART_transmitData( EUSCI_A2_BASE, enableNMEAdata[i] );
-    }
+//
+//    eUSCI_UART_Config uartConfig;
+//    uartConfig.selectClockSource = EUSCI_A_UART_CLOCKSOURCE_SMCLK;
+//    unsigned int n = MAP_CS_getSMCLK() / 115200;
+//    if (n > 16)
+//    {
+//        uartConfig.overSampling = EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION; // Over-sampling
+//        uartConfig.clockPrescalar = n >> 4;                                      // BRDIV = n / 16
+//        uartConfig.firstModReg = n - (uartConfig.clockPrescalar << 4);               // UCxBRF = int((n / 16) - int(n / 16)) * 16
+//    }
+//    else
+//    {
+//        uartConfig.overSampling = EUSCI_A_UART_LOW_FREQUENCY_BAUDRATE_GENERATION; // Low-frequency mode
+//        uartConfig.clockPrescalar = n;                                            // BRDIV = n
+//        uartConfig.firstModReg = 0;                                               // UCxBRF not used
+//    }
+//    uartConfig.secondModReg = 32;    // UCxBRS = 32 http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSP430BaudRateConverter/index.html
+//
+//    uartConfig.parity = EUSCI_A_UART_NO_PARITY;
+//    uartConfig.msborLsbFirst = EUSCI_A_UART_MSB_FIRST;
+//    uartConfig.numberofStopBits = EUSCI_A_UART_ONE_STOP_BIT;
+//    uartConfig.uartMode = EUSCI_A_UART_MODE;
+//
+//    Console::log("Set GPS UART Pins");
+//    MAP_GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P3,
+//                 GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
+//
+//    Console::log("Enable UART");
+//    /* Configuring UART Module */
+//    MAP_UART_initModule(EUSCI_A2_BASE, &uartConfig);
+//
+//    /* Enable UART module */
+//    MAP_UART_enableModule(EUSCI_A2_BASE);
+//
+//    Console::log("Register Interrupt");
+//    /* Enabling interrupts */
+//    MAP_UART_enableInterrupt(EUSCI_A2_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT);
+//    MAP_UART_registerInterrupt(EUSCI_A2_BASE, &printRX);
+//
+//    Console::log("Enable GPS Module");
+//    GPIO_setAsOutputPin(GPIO_PORT_P8, GPIO_PIN5);
+//    GPIO_setOutputHighOnPin(GPIO_PORT_P8, GPIO_PIN5);
+//
+//    uint8_t enableNMEAdata[10] = {0xA0, 0xA1, 0x00 ,0x03 ,0x09, 0x01, 0x00, 0x08 ,0x0D, 0x0A};
+//    for(int i = 0; i < 10; i++){
+//        Console::log("sending: %x", enableNMEAdata[i]);
+//        MAP_UART_transmitData( EUSCI_A2_BASE, enableNMEAdata[i] );
+//    }
 
 
     TaskManager::start(tasks, 3);
